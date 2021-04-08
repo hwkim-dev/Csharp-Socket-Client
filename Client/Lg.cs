@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Client
 {
@@ -13,5 +14,7 @@ namespace Client
             Console.WriteLine(k.sing_Up("h1", "h1", "h1", "h1"));
             Console.WriteLine(k.geta());
         }
+        
     }
+    
 }

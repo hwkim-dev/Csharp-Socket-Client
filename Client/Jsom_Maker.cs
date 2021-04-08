@@ -5,32 +5,16 @@ using System.Net;
 
 public class Json_Maker
 {
-    enum SendFormCode
-    {
-        SIGNUP = 1,
-        LOGIN = 2,
-        FINDID = 3,
-        CHANGEID = 4,
-        CHANGEPW = 5,
-        DELETEACCOUNT = 6,
-        EMAILVERTIFY = 7,
-        IDOVERLAP = 8,
-        NICKOVERLAP = 9,
-        EMAILOVERLAP = 10,
-        ISINPUTCORRECT = 11,
-    }
     [Serializable]
     private class SIGNUP_J
     {
-        public byte fn;
         public string id;
         public string pw;
         public string email;
         public string nickname;
 
-        public SIGNUP_J(byte _function, string _id, string _pw, string _email, string _nickname)
+        public SIGNUP_J(string _id, string _pw, string _email, string _nickname)
         {
-            this.fn = _function;
             this.id = _id;
             this.pw = _pw;
             this.email = _email;
@@ -39,21 +23,19 @@ public class Json_Maker
     }
     public string SIGNUP(string _id, string _pw, string _email, string _nickname)
     {
-        SIGNUP_J sign_Up = new SIGNUP_J((byte)SendFormCode.SIGNUP, _id, _pw, _email, _nickname);
+        SIGNUP_J sign_Up = new SIGNUP_J(_id, _pw, _email, _nickname);
         return JsonConvert.SerializeObject(sign_Up);
     }
 
     [Serializable]
     private class LOGIN_J
     {
-        public byte fn;
         public string id;
         public string pw;
         public bool purpose;
 
-        public LOGIN_J(byte _function, string _id, string _pw, bool _purpose)
+        public LOGIN_J(string _id, string _pw, bool _purpose)
         {
-            this.fn = _function;
             this.id = _id;
             this.pw = _pw;
             this.purpose = _purpose;
@@ -68,12 +50,10 @@ public class Json_Maker
     [Serializable]
     private class FINDID_J
     {
-        public byte fn;
         public string email;
 
-        public FINDID_J(byte _function, string _email)
+        public FINDID_J(string _email)
         {
-            this.fn = _function;
             this.email = _email;
         }
     }
@@ -86,13 +66,11 @@ public class Json_Maker
     [Serializable]
     private class CHANGEID_J
     {
-        public byte fn;
         public string id;
         public string new_id;
 
-        public CHANGEID_J(byte _function, string _id, string _new_id)
+        public CHANGEID_J(string _id, string _new_id)
         {
-            this.fn = _function;
             this.id = _id;
             this.new_id = _new_id;
         }
@@ -110,14 +88,12 @@ public class Json_Maker
     [Serializable]
     private class CHANGEPW_J
     {
-        public byte fn;
         public string id;
         public string pw;
         public string new_Pw;
 
-        public CHANGEPW_J(byte _function, string _id, string _pw, string _new_Pw)
+        public CHANGEPW_J(string _id, string _pw, string _new_Pw)
         {
-            this.fn = _function;
             this.id = _id;
             this.pw = _pw;
             this.new_Pw = _new_Pw;
@@ -136,13 +112,11 @@ public class Json_Maker
     [Serializable]
     private class DELETEACCOUNT_J
     {
-        public byte fn;
         public string id;
         public string pw;
 
-        public DELETEACCOUNT_J(byte fn, string _id, string _pw)
+        public DELETEACCOUNT_J( string _id, string _pw)
         {
-            this.fn = fn;
             this.id = _id;
             this.pw = _pw;
         }
@@ -160,12 +134,10 @@ public class Json_Maker
     [Serializable]
     private class EMAILVERTIFY_J
     {
-        public byte fn;
         public string email;
 
-        public EMAILVERTIFY_J(byte _function, string _email)
+        public EMAILVERTIFY_J(string _email)
         {
-            this.fn = _function;
             this.email = _email;
         }
     }
@@ -182,12 +154,10 @@ public class Json_Maker
     [Serializable]
     private class IDOVERLAP_J
     {
-        public byte fn;
         public string id;
 
-        public IDOVERLAP_J(byte _function, string _id)
+        public IDOVERLAP_J(string _id)
         {
-            this.fn = _function;
             this.id = _id;
         }
     }
@@ -203,12 +173,10 @@ public class Json_Maker
     [Serializable]
     private class NICKOVERLAP_J
     {
-        public byte fn;
         public string nickname;
 
-        public NICKOVERLAP_J(byte _function, string _nickname)
+        public NICKOVERLAP_J(string _nickname)
         {
-            this.fn = _function;
             this.nickname = _nickname;
         }
     }
@@ -225,12 +193,10 @@ public class Json_Maker
     [Serializable]
     private class EMAILOVERLAP_J
     {
-        public byte fn;
         public string email;
 
-        public EMAILOVERLAP_J(byte _function, string _email)
+        public EMAILOVERLAP_J(string _email)
         {
-            this.fn = _function;
             this.email = _email;
         }
     }
@@ -243,12 +209,10 @@ public class Json_Maker
     [Serializable]
     private class ISINPUTCORRECT_J
     {
-        public byte fn;
         public string email;
 
-        public ISINPUTCORRECT_J(byte _function, string _input)
+        public ISINPUTCORRECT_J(string _input)
         {
-            this.fn = _function;
             this.email = _input;
         }
     }

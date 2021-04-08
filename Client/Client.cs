@@ -13,6 +13,8 @@ public class Clients
     //1번쨰는 sendFormCode가 들어감
     private byte[] buf;
 
+
+    //테스트용!
     private StringBuilder server_resp;
     public StringBuilder geta()
     {
@@ -35,7 +37,20 @@ public class Clients
 
         jm = new Json_Maker();
     }
-
+    enum SendFormCode
+    {
+        SIGNUP = 1,
+        LOGIN = 2,
+        FINDID = 3,
+        CHANGEID = 4,
+        CHANGEPW = 5,
+        DELETEACCOUNT = 6,
+        EMAILVERTIFY = 7,
+        IDOVERLAP = 8,
+        NICKOVERLAP = 9,
+        EMAILOVERLAP = 10,
+        ISINPUTCORRECT = 11,
+    }
 
     //buf를 서버로 보낼 데이터
     //buf맨앞에 sendform 
@@ -54,7 +69,9 @@ public class Clients
     {
         //sql_builder.SIGNUP(id, pw, email, nickname);
 
-        buf = Encoding.UTF8.GetBytes(jm.SIGNUP(id, pw, email, nickname));
+        //null은 sendForm을 담을곳!
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.SIGNUP(id, pw, email, nickname));
+        buf[0] = (byte)SendFormCode.SIGNUP;
         send();
 
         //test용
@@ -67,7 +84,7 @@ public class Clients
         //sql_builder.LOGIN(id);
 
 
-        buf = Encoding.UTF8.GetBytes(jm.LOGIN(id, pw, purpose));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.LOGIN(id, pw, purpose));
         send();
 
         //성공여부에 따라 return
@@ -78,8 +95,8 @@ public class Clients
         //sql_builder.FINDID(email);
 
 
-        buf = Encoding.UTF8.GetBytes(jm.FINDID(email));
-
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.FINDID(email));
+        
         send();
 
         //returns ID
@@ -90,7 +107,7 @@ public class Clients
         //sql_builder.FINDID(email);
 
 
-        buf = Encoding.UTF8.GetBytes(jm.CHANGEID(id, new_id));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEID(id, new_id));
 
         send();
 
@@ -101,7 +118,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.CHANGEPW(id, pw, new_Pw));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEPW(id, pw, new_Pw));
 
         send();
 
@@ -111,7 +128,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.DELETEACCOUNT(id, pw));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.DELETEACCOUNT(id, pw));
 
         send();
 
@@ -121,7 +138,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.EMAILVERTIFY(email));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILVERTIFY(email));
 
         send();
 
@@ -131,7 +148,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.IDOVERLAP(id));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.IDOVERLAP(id));
 
         send();
 
@@ -141,7 +158,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.NICKOVERLAP(nickname));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.NICKOVERLAP(nickname));
 
         send();
 
@@ -151,7 +168,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.EMAILOVERLAP(email));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILOVERLAP(email));
 
         send();
 
@@ -161,7 +178,7 @@ public class Clients
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes(jm.NICKOVERLAP(nickname));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.NICKOVERLAP(nickname));
 
         send();
 
