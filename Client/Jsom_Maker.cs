@@ -43,7 +43,7 @@ public class Json_Maker
     }
     public string LOGIN(string _id, string _pw, bool _purpose)
     {
-        LOGIN_J login = new LOGIN_J((byte)SendFormCode.SIGNUP, _id, _pw, _purpose);
+        LOGIN_J login = new LOGIN_J(_id, _pw, _purpose);
         return JsonConvert.SerializeObject(login);
     }
 
@@ -59,7 +59,7 @@ public class Json_Maker
     }
     public string FINDID(string _email)//id?
     {
-        FINDID_J find_Id = new FINDID_J((byte)SendFormCode.SIGNUP, _email);
+        FINDID_J find_Id = new FINDID_J(_email);
         return JsonConvert.SerializeObject(find_Id);
     }
 
@@ -77,7 +77,7 @@ public class Json_Maker
     }
     public string CHANGEID(string _id, string _new_id)
     {
-        CHANGEID_J change_Id = new CHANGEID_J((byte)SendFormCode.SIGNUP, _id, _new_id);
+        CHANGEID_J change_Id = new CHANGEID_J(_id, _new_id);
         return JsonConvert.SerializeObject(change_Id);
     }
 
@@ -101,7 +101,7 @@ public class Json_Maker
     }
     public string CHANGEPW(string _id, string _pw, string _new_Pw)
     {
-        CHANGEPW_J change_Pw = new CHANGEPW_J((byte)SendFormCode.SIGNUP, _id, _pw, _new_Pw);
+        CHANGEPW_J change_Pw = new CHANGEPW_J(_id, _pw, _new_Pw);
         return JsonConvert.SerializeObject(change_Pw);
     }
 
@@ -123,7 +123,7 @@ public class Json_Maker
     }
     public string DELETEACCOUNT(string _id, string _pw)//chech pw
     {
-        DELETEACCOUNT_J delete_Account = new DELETEACCOUNT_J((byte)SendFormCode.SIGNUP, _id, _pw);
+        DELETEACCOUNT_J delete_Account = new DELETEACCOUNT_J(_id, _pw);
         return JsonConvert.SerializeObject(delete_Account);
     }
 
@@ -143,7 +143,7 @@ public class Json_Maker
     }
     public string EMAILVERTIFY(string _email)
     {
-        EMAILVERTIFY_J email_Vertify = new EMAILVERTIFY_J((byte)SendFormCode.SIGNUP, _email);
+        EMAILVERTIFY_J email_Vertify = new EMAILVERTIFY_J(_email);
         return JsonConvert.SerializeObject(email_Vertify);
     }
 
@@ -163,7 +163,7 @@ public class Json_Maker
     }
     public string IDOVERLAP(string _id)
     {
-        EMAILVERTIFY_J id_Overlap = new EMAILVERTIFY_J((byte)SendFormCode.SIGNUP, _id);
+        IDOVERLAP_J id_Overlap = new IDOVERLAP_J(_id);
         return JsonConvert.SerializeObject(id_Overlap);
     }
 
@@ -182,7 +182,7 @@ public class Json_Maker
     }
     public string NICKOVERLAP(string _nickname)
     {
-        EMAILVERTIFY_J nick_Overlap = new EMAILVERTIFY_J((byte)SendFormCode.SIGNUP, _nickname);
+        NICKOVERLAP_J nick_Overlap = new NICKOVERLAP_J(_nickname);
         return JsonConvert.SerializeObject(nick_Overlap);
     }
 
@@ -202,23 +202,23 @@ public class Json_Maker
     }
     public string EMAILOVERLAP(string _email)
     {
-        EMAILOVERLAP_J nick_Overlap = new EMAILOVERLAP_J((byte)SendFormCode.SIGNUP, _email);
+        EMAILOVERLAP_J nick_Overlap = new EMAILOVERLAP_J(_email);
         return JsonConvert.SerializeObject(nick_Overlap);
     }
 
-    [Serializable]
-    private class ISINPUTCORRECT_J
-    {
-        public string email;
+    //[Serializable]
+    //private class EMAILVERTICORRECT_J
+    //{
+    //    public string email;
 
-        public ISINPUTCORRECT_J(string _input)
-        {
-            this.email = _input;
-        }
-    }
-    public string ISINPUTCORRECT(string _input)
-    {
-        EMAILOVERLAP_J is_Input_Correct = new EMAILOVERLAP_J((byte)SendFormCode.SIGNUP, _input);
-        return JsonConvert.SerializeObject(is_Input_Correct);
-    }
+    //    public EMAILVERTICORRECT_J(string _input)
+    //    {
+    //        this.email = _input;
+    //    }
+    //}
+    //public string EMAILVERTICORRECT(string _input)
+    //{
+    //    EMAILVERTICORRECT_J email_Verti_Correct = new EMAILVERTICORRECT_J(_input);
+    //    return JsonConvert.SerializeObject(email_Verti_Correct);
+    //}
 }

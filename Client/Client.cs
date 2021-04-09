@@ -14,12 +14,18 @@ public class Clients
     private byte[] buf;
 
 
-    //테스트용!
+    //받은데이터 저장공간.
     private StringBuilder server_resp;
+    //받은데이터길이
+    int nRecv;
     public StringBuilder geta()
     {
         return server_resp;
     }
+
+    //받을데이터가 들어가는곳
+    byte[] recvBytes;
+
 
     //스레드 관리
     Thread clientThread;
@@ -49,7 +55,7 @@ public class Clients
         IDOVERLAP = 8,
         NICKOVERLAP = 9,
         EMAILOVERLAP = 10,
-        ISINPUTCORRECT = 11,
+        EMAILVERTICORRECT = 11,
     }
 
     //buf를 서버로 보낼 데이터
@@ -75,7 +81,7 @@ public class Clients
         send();
 
         //test용
-        return (server_resp.ToString() == "t") ? true : false ;
+        return (recvBytes[0] == 1) ? true : false ;
     }
 
     //purpose는 기본 true로!
@@ -85,20 +91,29 @@ public class Clients
 
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.LOGIN(id, pw, purpose));
+        buf[0] = (byte)SendFormCode.LOGIN;
         send();
 
         //성공여부에 따라 return
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
-    public string find_id(string email)
+    public string find_Id(string email)
     {
         //sql_builder.FINDID(email);
 
-
         buf = Encoding.UTF8.GetBytes('\0'+ jm.FINDID(email));
         
+        buf[0] = (byte)SendFormCode.FINDID;
         send();
 
+        if(recvBytes[0] == 1)
+        {
+            server_resp.Append(Encoding.UTF8.GetString(recvBytes, 1, nRecv));
+        }
+        else
+        {
+            return "fail";
+        }
         //returns ID
         return server_resp.ToString();
     }
@@ -108,81 +123,82 @@ public class Clients
 
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEID(id, new_id));
-
+        buf[0] = (byte)SendFormCode.CHANGEID;
         send();
 
 
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
     public bool change_Pw(string id, string pw, string new_Pw)
     {
         //sql_builder.FINDID(email);
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEPW(id, pw, new_Pw));
-
+        buf[0] = (byte)SendFormCode.CHANGEPW;
         send();
 
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
     public bool delete_Account(string id, string pw)
     {
         //sql_builder.FINDID(email);
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.DELETEACCOUNT(id, pw));
-
+        buf[0] = (byte)SendFormCode.DELETEACCOUNT;
         send();
 
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
-    public string email_Vertify(string email)
+    public bool email_Vertify(string email)
     {
         //sql_builder.FINDID(email);
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILVERTIFY(email));
-
+        buf[0] = (byte)SendFormCode.EMAILVERTIFY;
         send();
 
-        return server_resp.ToString();
+        return (recvBytes[0] == 1) ? true : false;
     }
     public bool id_Overlap(string id)
     {
         //sql_builder.FINDID(email);
-
+        
         buf = Encoding.UTF8.GetBytes('\0'+ jm.IDOVERLAP(id));
-
+        buf[0] = (byte)SendFormCode.IDOVERLAP;
         send();
 
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
     public bool nick_Overlap(string nickname)
     {
         //sql_builder.FINDID(email);
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.NICKOVERLAP(nickname));
-
+        buf[0] = (byte)SendFormCode.NICKOVERLAP;
         send();
 
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
     public bool email_Overlap(string email)
     {
         //sql_builder.FINDID(email);
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILOVERLAP(email));
-
+        buf[0] = (byte)SendFormCode.EMAILOVERLAP;
         send();
 
-        return (server_resp.ToString() == "t") ? true : false;
+        return (recvBytes[0] == 1) ? true : false ;
     }
-    public bool is_Input_Correct(string nickname)
+    public bool email_Verti_Correct(string _input, string id)
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes('\0'+ jm.NICKOVERLAP(nickname));
-
+        //buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILVERTICORRECT(_input));
+        buf = Encoding.UTF8.GetBytes('\0' + _input + id);
+        buf[0] = (byte)SendFormCode.EMAILVERTICORRECT;
         send();
 
-        return true;
+        return (recvBytes[0] == 1) ? true : false;
     }
 
     /*
@@ -287,14 +303,14 @@ public class Clients
 
         //받는데이터
         //recvBytes에 최종으로 받은 데이터가 저장된다.
-        byte[] recvBytes = new byte[1024];
+        recvBytes = new byte[1024];
 
-        int nRecv = socket.Receive(recvBytes);
+        nRecv = socket.Receive(recvBytes);
         //string txt = "" + recvBytes[0] + recvBytes[1];
 
 
 
-        server_resp.Append(Encoding.UTF8.GetString(recvBytes, 0, nRecv));
+        //server_resp.Append(Encoding.UTF8.GetString(recvBytes, 0, nRecv));
 
         socket.Close();
     }
