@@ -149,7 +149,8 @@ public class Clients
 
         return (recvBytes[0] == 1) ? true : false ;
     }
-    public bool email_Vertify(string email)
+    //커서 리턴
+    public sbyte email_Vertify(string email)
     {
         //sql_builder.FINDID(email);
 
@@ -157,7 +158,15 @@ public class Clients
         buf[0] = (byte)SendFormCode.EMAILVERTIFY;
         send();
 
-        return (recvBytes[0] == 1) ? true : false;
+    
+        if (recvBytes[0] == 1)
+        {
+            return (sbyte)recvBytes[1];
+        }
+        else
+        {
+            return -1;
+        }
     }
     public bool id_Overlap(string id)
     {
@@ -189,13 +198,17 @@ public class Clients
 
         return (recvBytes[0] == 1) ? true : false ;
     }
-    public bool email_Verti_Correct(string _input, string id)
+
+    //cursor는 아까 이메일인증으로 받은 값
+    public bool email_Verti_Correct(string _input, string _cursor)
     {
         //sql_builder.FINDID(email);
 
-        //buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILVERTICORRECT(_input));
-        buf = Encoding.UTF8.GetBytes('\0' + _input + id);
+        buf = Encoding.UTF8.GetBytes('\0' + _input + _cursor);
+        buf[0] = (byte)SendFormCode.EMAILVERTIFY;
+
         buf[0] = (byte)SendFormCode.EMAILVERTICORRECT;
+
         send();
 
         return (recvBytes[0] == 1) ? true : false;

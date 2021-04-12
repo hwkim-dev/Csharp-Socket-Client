@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading;
+using System.Timers;
 
 namespace Client
 {
@@ -12,11 +14,7 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            //Clients k = new Clients();
-            //Console.WriteLine(k.email_Overlap("asf"));
-            //Console.WriteLine(k.geta());
-        }
 
+        }
     }
-    
 }
