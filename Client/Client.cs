@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 public class Clients
 {
@@ -87,20 +88,14 @@ public class Clients
     //purpose는 기본 true로!
     public bool login(string id, string pw, bool purpose)
     {
-        //sql_builder.LOGIN(id);
-
-
         buf = Encoding.UTF8.GetBytes('\0'+ jm.LOGIN(id, pw, purpose));
         buf[0] = (byte)SendFormCode.LOGIN;
         send();
 
-        //성공여부에 따라 return
         return (recvBytes[0] == 1) ? true : false ;
     }
     public string find_Id(string email)
     {
-        //sql_builder.FINDID(email);
-
         buf = Encoding.UTF8.GetBytes('\0'+ jm.FINDID(email));
         
         buf[0] = (byte)SendFormCode.FINDID;
@@ -119,8 +114,6 @@ public class Clients
     }
     public bool change_Id(string id, string new_id)
     {
-        //sql_builder.FINDID(email);
-
 
         buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEID(id, new_id));
         buf[0] = (byte)SendFormCode.CHANGEID;
@@ -129,11 +122,11 @@ public class Clients
 
         return (recvBytes[0] == 1) ? true : false ;
     }
-    public bool change_Pw(string id, string pw, string new_Pw)
+    public bool change_Pw(string id, string pw, string new_Pw, string key)
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEPW(id, pw, new_Pw));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEPW(id, pw, new_Pw, key));
         buf[0] = (byte)SendFormCode.CHANGEPW;
         send();
 
@@ -153,7 +146,7 @@ public class Clients
     public sbyte email_Vertify(string email)
     {
         //sql_builder.FINDID(email);
-
+        server_resp.Clear();
         buf = Encoding.UTF8.GetBytes('\0'+ jm.EMAILVERTIFY(email));
         buf[0] = (byte)SendFormCode.EMAILVERTIFY;
         send();
@@ -200,7 +193,7 @@ public class Clients
     }
 
     //cursor는 아까 이메일인증으로 받은 값
-    public bool email_Verti_Correct(string _input, string _cursor)
+    public string email_Verti_Correct(string _input, string _cursor)
     {
         //sql_builder.FINDID(email);
 
@@ -210,87 +203,16 @@ public class Clients
         buf[0] = (byte)SendFormCode.EMAILVERTICORRECT;
 
         send();
-
-        return (recvBytes[0] == 1) ? true : false;
-    }
-
-    /*
-    public string find_Pw(string id)
-    {
-        sql_builder.FINDPW(id);
-
-        buf = Encoding.UTF8.GetBytes(query.ToString());
-        buf[0] = (byte)SendFormCode.SIGNUP;
-
-        send();
-
-        return txt;
-    }
-
-    //로그인 되어있는상태에서만
-    public void change_Id(string pw, string id, string new_id)
-    {
-        sql_builder.CHANGEID(id, new_id);
-        
-
-        buf = Encoding.UTF8.GetBytes(query.ToString());
-        buf[0] = (byte)SendFormCode.CHANGEID;
-
-        send();
-    }
-    public bool change_Pw(string id, string pw, string new_pw)
-    {
-        if(!login(id, pw, false)) { return false; }
-
-        sql_builder.CHANGEPW(id, new_pw);
-        
-        buf = Encoding.UTF8.GetBytes(query.ToString());
-        buf[0] = (byte)SendFormCode.CHANGEPW;
-
-        send();
-        if (txt.Equals('s')) 
-        { 
-            return true; 
+        //key 리턴하기
+        if (recvBytes[0] == 1)
+        {
+            return Encoding.UTF8.GetString(recvBytes, 1, nRecv);
         }
-        else 
-        { 
-            return false; 
+        else
+        {
+            return "fail";
         }
     }
-    public bool delete_Account(string id, string pw)
-    {
-        sql_builder.DELETEACCOUNT(id, pw);
-        
-        buf = Encoding.UTF8.GetBytes(query.ToString());
-        buf[0] = (byte)SendFormCode.DELETEACCOUNT;
-
-        send();
-
-        if (txt.Equals('s')) 
-        { 
-            return true; 
-        }
-        else 
-        { 
-            return false; 
-        }
-    }
-
-    //이메일로 6자리 숫자를 보내고
-    //클라이언트로 6자를 숫자를 보낸다.
-    public string email_Vertify(string email)
-    {
-        sql_builder.EMAILVERTIFY(email);
-        
-
-        buf = Encoding.UTF8.GetBytes(query.ToString());
-        buf[0] = (byte)SendFormCode.DELETEACCOUNT;
-
-        send();
-
-        return txt;
-    }
-    */
 
     private void send()
     {
@@ -310,20 +232,25 @@ public class Clients
         EndPoint serverEP = new IPEndPoint(ip_ad, 11200);
         socket.Connect(serverEP);
 
-        //string jsonData = ObjectToJson(보낼꺼);
-        //socket.Send(jsonData);
-        socket.Send(buf);
+        //For debugging
+        Stopwatch stop = new Stopwatch();
+        //For debugging
 
-        //받는데이터
-        //recvBytes에 최종으로 받은 데이터가 저장된다.
         recvBytes = new byte[1024];
 
+        //For debugging
+        stop.Start();
+        //For debugging
+
+
+        socket.Send(buf);
+
         nRecv = socket.Receive(recvBytes);
-        //string txt = "" + recvBytes[0] + recvBytes[1];
 
-
-
-        //server_resp.Append(Encoding.UTF8.GetString(recvBytes, 0, nRecv));
+        //For debugging
+        stop.Stop();
+        server_resp.Append(stop.ElapsedMilliseconds);
+        //For debugging
 
         socket.Close();
     }

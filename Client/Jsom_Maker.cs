@@ -91,17 +91,19 @@ public class Json_Maker
         public string id;
         public string pw;
         public string new_Pw;
+        public string key;
 
-        public CHANGEPW_J(string _id, string _pw, string _new_Pw)
+        public CHANGEPW_J(string _id, string _pw, string _new_Pw, string _key)
         {
             this.id = _id;
             this.pw = _pw;
             this.new_Pw = _new_Pw;
+            this.key = _key;
         }
     }
-    public string CHANGEPW(string _id, string _pw, string _new_Pw)
+    public string CHANGEPW(string _id, string _pw, string _new_Pw, string _key)
     {
-        CHANGEPW_J change_Pw = new CHANGEPW_J(_id, _pw, _new_Pw);
+        CHANGEPW_J change_Pw = new CHANGEPW_J(_id, _pw, _new_Pw, _key);
         return JsonConvert.SerializeObject(change_Pw);
     }
 
