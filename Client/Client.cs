@@ -74,13 +74,11 @@ public class Clients
 
     public bool sing_Up(string id, string pw, string email, string nickname)
     {
-        //sql_builder.SIGNUP(id, pw, email, nickname);
-
         //null은 sendForm을 담을곳!
         buf = Encoding.UTF8.GetBytes('\0'+ jm.SIGNUP(id, pw, email, nickname));
         buf[0] = (byte)SendFormCode.SIGNUP;
         send();
-
+        
         //test용
         return (recvBytes[0] == 1) ? true : false ;
     }
@@ -122,11 +120,11 @@ public class Clients
 
         return (recvBytes[0] == 1) ? true : false ;
     }
-    public bool change_Pw(string id, string pw, string new_Pw, string key)
+    public bool change_Pw(string id, string new_Pw, string key)
     {
         //sql_builder.FINDID(email);
 
-        buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEPW(id, pw, new_Pw, key));
+        buf = Encoding.UTF8.GetBytes('\0'+ jm.CHANGEPW(id, new_Pw, key));
         buf[0] = (byte)SendFormCode.CHANGEPW;
         send();
 
@@ -193,7 +191,7 @@ public class Clients
     }
 
     //cursor는 아까 이메일인증으로 받은 값
-    public string email_Verti_Correct(string _input, string _cursor)
+    public ushort email_Verti_Correct(string _input, string _cursor)
     {
         //sql_builder.FINDID(email);
 
@@ -206,11 +204,14 @@ public class Clients
         //key 리턴하기
         if (recvBytes[0] == 1)
         {
-            return Encoding.UTF8.GetString(recvBytes, 1, nRecv);
+            ushort val = recvBytes[1];
+            val = (ushort)(val << 8);
+            val = recvBytes[2];
+            return val;
         }
         else
         {
-            return "fail";
+            return 0;
         }
     }
 
@@ -232,25 +233,13 @@ public class Clients
         EndPoint serverEP = new IPEndPoint(ip_ad, 11200);
         socket.Connect(serverEP);
 
-        //For debugging
-        Stopwatch stop = new Stopwatch();
-        //For debugging
 
         recvBytes = new byte[1024];
-
-        //For debugging
-        stop.Start();
-        //For debugging
-
 
         socket.Send(buf);
 
         nRecv = socket.Receive(recvBytes);
 
-        //For debugging
-        stop.Stop();
-        server_resp.Append(stop.ElapsedMilliseconds);
-        //For debugging
 
         socket.Close();
     }
